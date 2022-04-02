@@ -58,11 +58,11 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
        mreleaseSlider.setSliderStyle(Slider::Rotary);
        
        addAndMakeVisible (resetEnvelope);
-       resetEnvelope.setButtonText ("Reset Envelope.");
+       resetEnvelope.setButtonText ("Reset Envelope");
        resetEnvelope.addListener (this);
        
        addAndMakeVisible(resetModEnvelope);
-       resetModEnvelope.setButtonText ("Reset Modulation Envelope.");
+       resetModEnvelope.setButtonText ("Reset Modulation");
        resetModEnvelope.addListener (this);      
        
        addAndMakeVisible(savePreset);
@@ -154,7 +154,7 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
        timecodeDisplayLabel.setFont (Font (Font::getDefaultMonospacedFontName(), 15.0f, Font::plain));
 
        // set resize limits for this plug-in
-       setResizeLimits (800, 400, 1024, 700);
+       setResizeLimits (800, 440, 1220, 440);
 
        lastUIWidth .referTo (owner.state.state.getChildWithName ("uiState").getPropertyAsValue ("width",  nullptr));
        lastUIHeight.referTo (owner.state.state.getChildWithName ("uiState").getPropertyAsValue ("height", nullptr));
@@ -215,36 +215,53 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
        midiKeyboard        .setBounds (r.removeFromBottom (70));
 
        r.removeFromTop (20);
-       auto sliderArea = r.removeFromTop (60);
-       auto spacer = r.removeFromTop(20);
-       auto sliderArea2 = r.removeFromTop (60);
+       auto area1 = r.removeFromTop(30);
+       auto spacer1 = r.removeFromTop(30);
+       int area1Width = area1.getWidth();
+       auto area2 = r.removeFromTop (60);
+       int area2SliderWidth = area2.getWidth() * 0.60;
+       int area2IndexWidth = area2.getWidth() * 0.20;
+       int area2PresetWidth = area2.getWidth() * 0.20;
        auto spacer2 = r.removeFromTop(20);
-       auto sliderArea3 = r.removeFromTop (60);
+       auto area3 = r.removeFromTop (60);
+       int area3SliderWidth = area3.getWidth() * 0.60;
+       int area3IndexWidth = area3.getWidth() * 0.20;
+       int area3PresetWidth = area3.getWidth() * 0.20;
+       auto spacer3 = r.removeFromTop(20);
+       auto area4 = r.removeFromTop (60);
+       int area4SliderWidth = area4.getWidth() * 0.60;
+       int area4IndexWidth = area4.getWidth() * 0.20;
+       //int area4PresetWidth = area4.getWidth() * 0.20;
 
-       gainSlider.setBounds  (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth() / 2)));
-       delaySlider.setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth())));
-       modSlider.setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth())));
-       iNumBox.setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth())));
-       auto boxSpacer_1a = sliderArea.removeFromLeft(20);
-       iDenBox.setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth())));
-       auto boxSpacer_1b = sliderArea.removeFromLeft(20);
-       savePreset.setBounds(sliderArea.removeFromLeft(jmin(180, sliderArea.getWidth())));
+       presetsBox.setBounds(area1.removeFromLeft((area1Width * 0.2) + 5));
+       auto boxSpacer_1a = area1.removeFromLeft(5);
+       savePreset.setBounds(area1.removeFromLeft(120));
 
-       attackSlider.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth())));
-       sustainSlider.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth())));
-       releaseSlider.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth())));
-       resetEnvelope.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth())));
-       auto boxSpacer_2a = sliderArea2.removeFromLeft(20);
-       iEnvBox.setBounds (sliderArea2.removeFromLeft (jmin (180, sliderArea2.getWidth())));
-       auto boxSpacer_2b = sliderArea2.removeFromLeft(20);
-       presetsBox.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth())));
+       gainSlider.setBounds  (area2.removeFromLeft (area2SliderWidth / 3));
+       delaySlider.setBounds (area2.removeFromLeft (area2SliderWidth / 3));
+       modSlider.setBounds (area2.removeFromLeft (area2SliderWidth / 3));
+       iNumBox.setBounds(area2.removeFromLeft(110));
+       //iNumBox.setBounds (area2.removeFromLeft ((area2IndexWidth / 2) - 20));
+       auto boxSpacer_2a = area2.removeFromLeft(20);
+       iDenBox.setBounds (area2.removeFromLeft (110));
+       auto boxSpacer_2b = area2.removeFromLeft(20);
+       //savePreset.setBounds(area2.removeFromLeft(area2PresetWidth));
 
-       mattackSlider.setBounds(sliderArea3.removeFromLeft(jmin(180, sliderArea3.getWidth())));
-       msustainSlider.setBounds(sliderArea3.removeFromLeft(jmin(180, sliderArea3.getWidth())));
-       mreleaseSlider.setBounds(sliderArea3.removeFromLeft(jmin(180, sliderArea3.getWidth())));
-       resetModEnvelope.setBounds(sliderArea3.removeFromLeft(jmin(180, sliderArea3.getWidth())));
-       auto boxSpacer3 = sliderArea3.removeFromLeft(20);
-       iModBox.setBounds (sliderArea3.removeFromLeft (jmin (180, sliderArea3.getWidth())));
+       attackSlider.setBounds(area3.removeFromLeft(area3SliderWidth / 3));
+       sustainSlider.setBounds(area3.removeFromLeft(area3SliderWidth / 3));
+       releaseSlider.setBounds(area3.removeFromLeft(area3SliderWidth / 3));
+       resetEnvelope.setBounds(area3.removeFromLeft(75));
+       auto boxSpacer_3a = area3.removeFromLeft(20);
+       iEnvBox.setBounds (area3.removeFromLeft (area3.getWidth()));
+       auto boxSpacer_3b = area3.removeFromLeft(20);
+       //presetsBox.setBounds(area3.removeFromLeft(area3PresetWidth));
+
+       mattackSlider.setBounds(area4.removeFromLeft(area4SliderWidth / 3));
+       msustainSlider.setBounds(area4.removeFromLeft(area4SliderWidth / 3));
+       mreleaseSlider.setBounds(area4.removeFromLeft(area4SliderWidth / 3));
+       resetModEnvelope.setBounds(area4.removeFromLeft(75));
+       auto boxSpacer3 = area4.removeFromLeft(20);
+       iModBox.setBounds (area4.removeFromLeft (area4.getWidth()));
 
        
        lastUIWidth  = getWidth();
