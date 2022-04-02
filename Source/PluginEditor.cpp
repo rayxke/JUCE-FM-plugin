@@ -220,17 +220,12 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
        int area1Width = area1.getWidth();
        auto area2 = r.removeFromTop (60);
        int area2SliderWidth = area2.getWidth() * 0.60;
-       int area2IndexWidth = area2.getWidth() * 0.20;
-       int area2PresetWidth = area2.getWidth() * 0.20;
        auto spacer2 = r.removeFromTop(20);
        auto area3 = r.removeFromTop (60);
        int area3SliderWidth = area3.getWidth() * 0.60;
-       int area3IndexWidth = area3.getWidth() * 0.20;
-       int area3PresetWidth = area3.getWidth() * 0.20;
        auto spacer3 = r.removeFromTop(20);
        auto area4 = r.removeFromTop (60);
        int area4SliderWidth = area4.getWidth() * 0.60;
-       int area4IndexWidth = area4.getWidth() * 0.20;
        //int area4PresetWidth = area4.getWidth() * 0.20;
 
        presetsBox.setBounds(area1.removeFromLeft((area1Width * 0.2) + 5));
