@@ -103,7 +103,7 @@ public:
                 knobFB.alignContent = juce::FlexBox::AlignContent::flexStart;
                 for (Knob* k : knobArray)
                 {
-                    knobFB.items.add(FlexItem(*k).withMinHeight(120.0f).withMinWidth(120.0f).withFlex(1));
+                    knobFB.items.add(FlexItem(*k).withMinHeight(110.0f).withMinWidth(90.0f).withFlex(1));
                 }
                 FlexBox fb;
                 fb.flexDirection = FlexBox::Direction::column;
