@@ -10,8 +10,9 @@
 
 
 
-JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor& owner)
-   : AudioProcessorEditor (owner),
+JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor(JuceDemoPluginAudioProcessor& owner)
+    : AudioProcessorEditor(owner),
+    knobPanel(),
      midiKeyboard         (owner.keyboardState, MidiKeyboardComponent::horizontalKeyboard),
      gainAttachment       (owner.state, "gain",  gainSlider),
      delayAttachment      (owner.state, "delay", delaySlider),
@@ -39,194 +40,105 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 
 
    {
-       //TODO: Is it possible to convert this to a for loop?
-       // add some sliders..
-       addAndMakeVisible (gainSlider);
-       gainSlider.setSliderStyle (Slider::Rotary);
+        //TODO: Is it possible to convert this to a for loop?
+        // add some sliders..
 
-       addAndMakeVisible (delaySlider);
-       delaySlider.setSliderStyle (Slider::Rotary);
-       
-       addAndMakeVisible (modSlider);
-       modSlider.setSliderStyle (Slider::Rotary);
+    
 
-       addAndMakeVisible(attackSlider);
-       attackSlider.setSliderStyle(Slider::Rotary);
+     
+    Knob *gainKnob = new Knob(&gainSlider, "Gain");
+    knobPanel.addToPanel(gainKnob);
+    Knob* delayKnob = new Knob(&delaySlider, "Delay");
+    knobPanel.addToPanel(delayKnob);
+    Knob* modKnob = new Knob(&modSlider, "Mod");
+    knobPanel.addToPanel(modKnob);
+    Knob* attackKnob = new Knob(&attackSlider, "Attack");
+    knobPanel.addToPanel(attackKnob);
+    Knob* sustainKnob = new Knob(&sustainSlider, "Sustain");
+    knobPanel.addToPanel(sustainKnob);
+    Knob* releaseKnob = new Knob(&releaseSlider, "Release");
+    knobPanel.addToPanel(releaseKnob);
+    Knob* mattackKnob = new Knob(&mattackSlider, "mAttack");
+    knobPanel.addToPanel(mattackKnob);
+    Knob* msustainKnob = new Knob(&msustainSlider, "mSustain");
+    knobPanel.addToPanel(msustainKnob);
+    Knob* mreleaseKnob = new Knob(&mreleaseSlider, "mRelease");
+    knobPanel.addToPanel(mreleaseKnob);
 
-       addAndMakeVisible(sustainSlider);
-       sustainSlider.setSliderStyle(Slider::Rotary);
+    Knob* chebyshevAmpKnob1 = new Knob(&chebyshevAmpSlider1, "CA1");
+    knobPanel.addToPanel(chebyshevAmpKnob1);
+    Knob* chebyshevAmpKnob2 = new Knob(&chebyshevAmpSlider2, "CA2");
+    knobPanel.addToPanel(chebyshevAmpKnob2);
+    Knob* chebyshevAmpKnob3 = new Knob(&chebyshevAmpSlider3, "CA3");
+    knobPanel.addToPanel(chebyshevAmpKnob3);
+    Knob* chebyshevAmpKnob4 = new Knob(&chebyshevAmpSlider4, "CA4");
+    knobPanel.addToPanel(chebyshevAmpKnob4);
+    Knob* chebyshevAmpKnob5 = new Knob(&chebyshevAmpSlider5, "CA5");
+    knobPanel.addToPanel(chebyshevAmpKnob5);
+    Knob* chebyshevAmpKnob6 = new Knob(&chebyshevAmpSlider6, "CA6");
+    knobPanel.addToPanel(chebyshevAmpKnob6);
+    Knob* chebyshevAmpKnob7 = new Knob(&chebyshevAmpSlider7, "CA7");
+    knobPanel.addToPanel(chebyshevAmpKnob7);
+    Knob* chebyshevAmpKnob8 = new Knob(&chebyshevAmpSlider8, "CA8");
+    knobPanel.addToPanel(chebyshevAmpKnob8);
+    Knob* chebyshevAmpKnob9 = new Knob(&chebyshevAmpSlider9, "CA9");
+    knobPanel.addToPanel(chebyshevAmpKnob9);
 
-       addAndMakeVisible(releaseSlider);
-       releaseSlider.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(mattackSlider);
-       mattackSlider.setSliderStyle(Slider::Rotary);
+    addAndMakeVisible(knobPanel);
 
-       addAndMakeVisible(msustainSlider);
-       msustainSlider.setSliderStyle(Slider::Rotary);
+    menuPanel.addToPanel(&resetEnvelope);
+    resetEnvelope.setButtonText("Reset Envelope.");
+    resetEnvelope.addListener(this);
+    menuPanel.addToPanel(&resetModEnvelope);
+    resetModEnvelope.setButtonText("Reset Modulation Envelope.");
+    resetModEnvelope.addListener(this);
+    menuPanel.addToPanel(&savePreset);
+    savePreset.setButtonText("Save Preset");
+    savePreset.addListener(this);
 
-       addAndMakeVisible(mreleaseSlider);
-       mreleaseSlider.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider1);
-       chebyshevAmpSlider1.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider2);
-       chebyshevAmpSlider2.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider3);
-       chebyshevAmpSlider3.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider3);
-       chebyshevAmpSlider3.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider4);
-       chebyshevAmpSlider4.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider5);
-       chebyshevAmpSlider5.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider6);
-       chebyshevAmpSlider6.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider7);
-       chebyshevAmpSlider7.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider8);
-       chebyshevAmpSlider8.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible(chebyshevAmpSlider9);
-       chebyshevAmpSlider9.setSliderStyle(Slider::Rotary);
-       
-       addAndMakeVisible (resetEnvelope);
-       resetEnvelope.setButtonText ("Reset Envelope.");
-       resetEnvelope.addListener (this);
-       
-       addAndMakeVisible(resetModEnvelope);
-       resetModEnvelope.setButtonText ("Reset Modulation Envelope.");
-       resetModEnvelope.addListener (this);      
-       
-       addAndMakeVisible(savePreset);
-       savePreset.setButtonText("Save Preset");
-       savePreset.addListener(this);
-       
-       /*addAndMakeVisible (iNumSlider);
-       iNumSlider.setSliderStyle (Slider::Rotary);
-       
-       addAndMakeVisible (iDenSlider);
-       iDenSlider.setSliderStyle (Slider::Rotary);*/
-       
-       addAndMakeVisible(presetsBox);
+    menuPanel.addToPanel(&presetsBox);
 
-       addAndMakeVisible(iNumBox);
-       
-       for (int i = 2; i < 100; i++)
-       { iNumBox.addItem(std::to_string(i), i);
-       }
-       
-       addAndMakeVisible(iDenBox);
-       for (int i = 2; i <= 20; i++)
-       {
-           iDenBox.addItem(std::to_string(i), i);
-       }
-       
-       iDenBox.setSelectedId(2);
-       iNumBox.setSelectedId(2);
+    menuPanel.addToPanel(&iNumBox);
 
-       
-       addAndMakeVisible(iEnvBox);
-       iEnvBox.addItem("Lin Att. - Lin Dec.", 0);
-       iEnvBox.addItem("Exp Att.. - Lin Dec.", 1);
-       iEnvBox.addItem("Lin Att.. - Exp Dec.", 2);
+    for (int i = 2; i < 100; i++)
+    {
+        iNumBox.addItem(std::to_string(i), i);
+    }
 
-       iEnvBox.addItem("Exp Att.. - Exp Dec.", 3);
-       
-       addAndMakeVisible(iModBox);
-       iModBox.addItem("Lin Att. - Lin Dec.", 0);
-       iModBox.addItem("Exp Att.. - Lin Dec.", 1);
-       iModBox.addItem("Lin Att.. - Exp Dec.", 2);
+    menuPanel.addToPanel(&iDenBox);
+    for (int i = 2; i <= 20; i++)
+    {
+        iDenBox.addItem(std::to_string(i), i);
+    }
 
-       iModBox.addItem("Exp Att.. - Exp Dec.", 3);
+    iDenBox.setSelectedId(2);
+    iNumBox.setSelectedId(2);
 
 
-               
+    menuPanel.addToPanel(&iEnvBox);
+    iEnvBox.addItem("Lin Att. - Lin Dec.", 0);
+    iEnvBox.addItem("Exp Att.. - Lin Dec.", 1);
+    iEnvBox.addItem("Lin Att.. - Exp Dec.", 2);
 
-       // add some labels for the sliders..
-       gainLabel.attachToComponent (&gainSlider, false);
-       gainLabel.setFont (Font (11.0f));
+    iEnvBox.addItem("Exp Att.. - Exp Dec.", 3);
 
-       delayLabel.attachToComponent (&delaySlider, false);
-       delayLabel.setFont (Font (11.0f));
-       
-       modLabel.attachToComponent (&modSlider, false);
-       modLabel.setFont (Font (11.0f));
-       
-       numLabel.attachToComponent (&iNumBox, false);
-       numLabel.setFont (Font (11.0f));
-       
-       denLabel.attachToComponent (&iDenBox, false);
-       denLabel.setFont (Font (11.0f));
+    menuPanel.addToPanel(&iModBox);
+    iModBox.addItem("Lin Att. - Lin Dec.", 0);
+    iModBox.addItem("Exp Att.. - Lin Dec.", 1);
+    iModBox.addItem("Lin Att.. - Exp Dec.", 2);
 
-       attackLabel.attachToComponent(&attackSlider, false);
-       attackLabel.setFont(Font(11.0f));
+    iModBox.addItem("Exp Att.. - Exp Dec.", 3);
 
-       sustainLabel.attachToComponent(&sustainSlider, false);
-       sustainLabel.setFont(Font(11.0f));
-
-       releaseLabel.attachToComponent(&releaseSlider, false);
-       releaseLabel.setFont(Font(11.0f));
-       
-       mattackLabel.attachToComponent(&mattackSlider, false);
-       attackLabel.setFont(Font(11.0f));
-
-       msustainLabel.attachToComponent(&msustainSlider, false);
-       msustainLabel.setFont(Font(11.0f));
-
-       mreleaseLabel.attachToComponent(&mreleaseSlider, false);
-       mreleaseLabel.setFont(Font(11.0f));
-
-       presetsLabel.attachToComponent(&presetsBox, false);
-       presetsLabel.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel1.attachToComponent(&chebyshevAmpSlider1, false);
-       chebyshevAmpLabel1.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel2.attachToComponent(&chebyshevAmpSlider2, false);
-       chebyshevAmpLabel2.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel3.attachToComponent(&chebyshevAmpSlider3, false);
-       chebyshevAmpLabel3.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel3.attachToComponent(&chebyshevAmpSlider3, false);
-       chebyshevAmpLabel3.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel4.attachToComponent(&chebyshevAmpSlider4, false);
-       chebyshevAmpLabel4.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel5.attachToComponent(&chebyshevAmpSlider5, false);
-       chebyshevAmpLabel5.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel6.attachToComponent(&chebyshevAmpSlider6, false);
-       chebyshevAmpLabel6.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel7.attachToComponent(&chebyshevAmpSlider7, false);
-       chebyshevAmpLabel7.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel8.attachToComponent(&chebyshevAmpSlider8, false);
-       chebyshevAmpLabel8.setFont(Font(11.0f));
-       
-       chebyshevAmpLabel9.attachToComponent(&chebyshevAmpSlider9, false);
-       chebyshevAmpLabel9.setFont(Font(11.0f));
-
+    addAndMakeVisible(menuPanel);
        // add the midi keyboard component..
        addAndMakeVisible (midiKeyboard);
-
+       
        // add a label that will display the current timecode and status..
        addAndMakeVisible (timecodeDisplayLabel);
        timecodeDisplayLabel.setFont (Font (Font::getDefaultMonospacedFontName(), 15.0f, Font::plain));
 
        // set resize limits for this plug-in
-       setResizeLimits (800, 400, 1024, 700);
+       setResizeLimits (80, 40, 10240, 7000);
 
        lastUIWidth .referTo (owner.state.state.getChildWithName ("uiState").getPropertyAsValue ("width",  nullptr));
        lastUIHeight.referTo (owner.state.state.getChildWithName ("uiState").getPropertyAsValue ("height", nullptr));
@@ -279,65 +191,19 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
 
    void JuceDemoPluginAudioProcessorEditor::resized()
    {
-       // This lays out our child components...
+       auto r = getLocalBounds().reduced(8);
+       timecodeDisplayLabel.setBounds(r.removeFromTop(26));
+       midiKeyboard.setBounds(r.removeFromBottom(80));
+       r.removeFromBottom(10);
+       r.removeFromTop(20);
 
-       auto r = getLocalBounds().reduced (8);
+       FlexBox fb;
 
-       timecodeDisplayLabel.setBounds (r.removeFromTop (26));
-       midiKeyboard        .setBounds (r.removeFromBottom (70));
-
-       r.removeFromTop (20);
-       auto sliderArea = r.removeFromTop (60);
-       auto spacer = r.removeFromTop(20);
-       auto sliderArea2 = r.removeFromTop (60);
-       auto spacer2 = r.removeFromTop(20);
-       auto sliderArea3 = r.removeFromTop (60);
-       auto sliderArea4 = r.removeFromTop (60);
-       auto sliderArea5 = r.removeFromTop (60);
-       auto sliderArea6 = r.removeFromTop (60);
-
-       gainSlider.setBounds  (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth() / 2)));
-       delaySlider.setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth())));
-       modSlider.setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth())));
-       iNumBox.setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth()/2)));
-       auto boxSpacer_1a = sliderArea.removeFromLeft(20);
-       iDenBox.setBounds (sliderArea.removeFromLeft (jmin (180, sliderArea.getWidth())));
-       auto boxSpacer_1b = sliderArea.removeFromLeft(20);
-       savePreset.setBounds(sliderArea.removeFromLeft(jmin(180, sliderArea.getWidth())));
-
-       attackSlider.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth())));
-       sustainSlider.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth())));
-       releaseSlider.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth())));
-       resetEnvelope.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth() /2)));
-       auto boxSpacer_2a = sliderArea2.removeFromLeft(20);
-       iEnvBox.setBounds (sliderArea2.removeFromLeft (jmin (180, sliderArea2.getWidth())));
-       auto boxSpacer_2b = sliderArea2.removeFromLeft(20);
-       presetsBox.setBounds(sliderArea2.removeFromLeft(jmin(180, sliderArea2.getWidth())));
-
-       mattackSlider.setBounds(sliderArea3.removeFromLeft(jmin(180, sliderArea3.getWidth())));
-       msustainSlider.setBounds(sliderArea3.removeFromLeft(jmin(180, sliderArea3.getWidth())));
-       mreleaseSlider.setBounds(sliderArea3.removeFromLeft(jmin(180, sliderArea3.getWidth())));
-       resetModEnvelope.setBounds(sliderArea3.removeFromLeft(jmin(180, sliderArea3.getWidth())));
-       auto boxSpacer3a = sliderArea3.removeFromLeft(20);
-       iModBox.setBounds (sliderArea3.removeFromLeft (jmin (180, sliderArea3.getWidth())));
-       auto boxSpacer3b = sliderArea3.removeFromLeft(20);
+       FlexItem left ((float)r.getWidth() * 0.6f, (float)r.getHeight(), knobPanel);
+       FlexItem right((float)r.getWidth() * 0.4f, (float)r.getHeight(), menuPanel);
+       fb.items.addArray({left, right});
+       fb.performLayout(r.toFloat());
        
-       
-       chebyshevAmpSlider1.setBounds(sliderArea4.removeFromLeft(jmin(180, sliderArea4.getWidth())));
-       chebyshevAmpSlider2.setBounds(sliderArea4.removeFromLeft(jmin(180, sliderArea4.getWidth())));
-       chebyshevAmpSlider3.setBounds(sliderArea4.removeFromLeft(jmin(180, sliderArea4.getWidth())));
-       
-       chebyshevAmpSlider4.setBounds(sliderArea5.removeFromLeft(jmin(180, sliderArea5.getWidth())));
-       chebyshevAmpSlider5.setBounds(sliderArea5.removeFromLeft(jmin(180, sliderArea5.getWidth())));
-       chebyshevAmpSlider6.setBounds(sliderArea5.removeFromLeft(jmin(180, sliderArea5.getWidth())));
-       
-       chebyshevAmpSlider7.setBounds(sliderArea6.removeFromLeft(jmin(180, sliderArea6.getWidth())));
-       chebyshevAmpSlider8.setBounds(sliderArea6.removeFromLeft(jmin(180, sliderArea6.getWidth())));
-       chebyshevAmpSlider9.setBounds(sliderArea6.removeFromLeft(jmin(180, sliderArea6.getWidth())));
-
-       
-       lastUIWidth  = getWidth();
-       lastUIHeight = getHeight();
    }
 
    void JuceDemoPluginAudioProcessorEditor::timerCallback()

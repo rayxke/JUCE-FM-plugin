@@ -65,6 +65,104 @@ public:
         AudioProcessorValueTreeState::ComboBoxAttachment iNumAttachment, iDenAttachment, iEnvAttachment, iModEnvAttachment, presetsAttachment;
         Colour backgroundColour;
 
+        //OwnedArray<Slider> sliderArray;
+
+        class Knob : public GroupComponent
+        {
+        public:
+            Knob(juce::Slider* s, const String& label)
+            {
+                s->setSliderStyle(Slider::Rotary);
+                setText(label);
+                setTextLabelPosition(Justification::centredTop);
+                addAndMakeVisible(s);
+                slider = s;
+            }
+            void resized() override
+            {
+                slider->setBounds(getLocalBounds().reduced(10));
+                slider->setTextBoxStyle(Slider::TextBoxBelow, true, 50, 20);
+            }
+        private:
+            Slider* slider;
+        };
+
+        struct KnobPanel : public Component
+        {
+
+            void addToPanel(Knob* knob) {
+                knobArray.add(knob);
+                addAndMakeVisible(knob);
+            }
+
+            void resized() override
+            {
+                FlexBox knobFB;
+                knobFB.flexWrap = juce::FlexBox::Wrap::wrap;
+                knobFB.justifyContent = juce::FlexBox::JustifyContent::flexStart;
+                knobFB.alignContent = juce::FlexBox::AlignContent::flexStart;
+                for (Knob* k : knobArray)
+                {
+                    knobFB.items.add(FlexItem(*k).withMinHeight(120.0f).withMinWidth(120.0f).withFlex(1));
+                }
+                FlexBox fb;
+                fb.flexDirection = FlexBox::Direction::column;
+                fb.items.add(FlexItem(knobFB).withFlex(2.5));
+                fb.performLayout(getLocalBounds().toFloat());
+                fb.performLayout(getLocalBounds().toFloat());
+            }
+
+            Array<Knob*> knobArray;
+        };
+
+        
+
+        KnobPanel knobPanel;
+
+        struct MenuPanel : public Component
+        {
+
+            void addToPanel(Component* component)
+            {
+                componentArray.add(component);
+                addAndMakeVisible(component);
+            }
+
+            void paint(Graphics& g) override
+            {
+                g.fillAll(Colours::black);
+            }
+
+            void resized() override
+            {
+                Grid grid;
+
+                grid.rowGap = 10_px;
+                grid.columnGap = 10_px;
+
+                using Track = Grid::TrackInfo;
+
+                grid.templateRows = { Track(1_fr), Track(1_fr), Track(1_fr) };
+
+                grid.templateColumns = { Track(1_fr),
+                                         Track(1_fr),
+                                         Track(1_fr) };
+                
+                grid.autoFlow = Grid::AutoFlow::row;
+                for (auto* c : componentArray)
+                {
+                    grid.items.add(GridItem(c));
+                }
+
+                grid.performLayout(getLocalBounds());
+            }
+            Array<Component*> componentArray;
+        };
+
+        MenuPanel menuPanel;
+
+        
+
         // these are used to persist the UI's size - the values are stored along with the
         // filter's other parameters, and the UI component will update them when it gets
         // resized.
@@ -91,3 +189,4 @@ public:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceDemoPluginAudioProcessorEditor)
 };
+
