@@ -96,8 +96,6 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor(JuceDemoP
     savePreset.setButtonText("Save Preset");
     savePreset.addListener(this);
 
-    menuPanel.addToPanel(&presetsBox);
-
     menuPanel.addToPanel(&iNumBox);
 
     for (int i = 2; i < 100; i++)
@@ -110,6 +108,8 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor(JuceDemoP
     {
         iDenBox.addItem(std::to_string(i), i);
     }
+
+    menuPanel.addToPanel(&presetsBox);
 
     iDenBox.setSelectedId(2);
     iNumBox.setSelectedId(2);
