@@ -1,21 +1,6 @@
 # JUCE-FM Plugin
-Modifications to the JUCE Synthesizer Plugin Demo to incorporate FM synthesis.
-
-This file has some small changes built on top of a JUCE tutorial to support some aspects of FM synthesis for your DAW plugin.  
-
-#### TODO: 
- - [X] (Added by Andreas) slider for index of modulation
- - [X] (From Original Demo) Midi Playback with Volume Adjustment
- - [X] (From Original Demo) Basic Envelope w/ Delay parameter
- - [X] Adjustment for ratio selector between mod freq and carrier freq
- - [X] Envelope adjustment
-    - [X] Signal
-    - [X] ADSR adjustors
- - [X] Chebyshev Waveshaper
- - [ ] Preset Saving
- - [X] Saw Wave Output
- - [ ] Waveshape Display
-    
+  
+This is an FM Synthesizer that can be run as a plugin or as a Standalone app. It supports basic aspects of FM Synthesis.   
     
 ## Installation
 ### Mac OS
