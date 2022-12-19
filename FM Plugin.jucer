@@ -8,6 +8,7 @@
               jucerFormatVersion="1" pluginName="FM Plugin" pluginCode="Pbzk">
   <MAINGROUP id="mYkFYr" name="FM Plugin">
     <GROUP id="{B0B5AB16-2FF1-22BD-65AB-F26847DD600B}" name="Source">
+      <FILE id="YJY0Pe" name="piano.png" compile="0" resource="1" file="Source/piano.png"/>
       <FILE id="CCCkvF" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="oXC6ds" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
@@ -123,9 +124,11 @@
         <MODULEPATH id="juce_gui_extra" path=""/>
       </MODULEPATHS>
     </LINUX_MAKE>
-    <XCODE_IPHONE targetFolder="Builds/iOS" customXcodeResourceFolders="/Users/kearymobley/JUCE/examples/Assets">
+    <XCODE_IPHONE targetFolder="Builds/iOS" customXcodeResourceFolders="/Users/kearymobley/JUCE/examples/Assets"
+                  smallIcon="YJY0Pe" bigIcon="YJY0Pe">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="AudioPluginDemo"/>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="AudioPluginDemo"
+                       codeSigningIdentity="Apple Development"/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="AudioPluginDemo"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

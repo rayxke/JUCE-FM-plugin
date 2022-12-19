@@ -13,17 +13,32 @@
 class SineWaveVoice   : public SynthesiserVoice
 {
 public:
+    enum ChebyshevLevels{
+      chebyshevLevel0,
+      chebyshevLevel1,
+      chebyshevLevel2,
+      chebyshevLevel3,
+      chebyshevLevel4,
+      chebyshevLevel5,
+      chebyshevLevel6,
+      chebyshevLevel7,
+      chebyshevLevel8,
+      chebyshevLevel9,
+      chebyshevLevelEnd
+    };
     SineWaveVoice();
 
     bool canPlaySound (SynthesiserSound* sound) override;
     void startNote (int midiNoteNumber, float velocity,
                     SynthesiserSound* /*sound*/, int) override;
     void stopNote (float /*velocity*/, bool allowTailOff) override;
-    float chebyshevCalulation(int chebyshev, float x);
+    float chebyshevCalculation(int chebyshev, float x);
+    float getChebyshevSignal(float currentSample);
     void pitchWheelMoved (int /*newValue*/) override;
     void controllerMoved (int paramNum, int value) override;
     void renderNextBlock (AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
-    
+    void setRelease();
+    void setAttack();
     using SynthesiserVoice::renderNextBlock;
 
 private:
@@ -56,19 +71,6 @@ private:
       double modAngleDelta = 0.0;
       double modIndex = 0.0;
       int freqDev = 50;
-      enum ChebyshevLevels{
-        chebyshevLevel0,
-        chebyshevLevel1,
-        chebyshevLevel2,
-        chebyshevLevel3,
-        chebyshevLevel4,
-        chebyshevLevel5,
-        chebyshevLevel6,
-        chebyshevLevel7,
-        chebyshevLevel8,
-        chebyshevLevel9,
-        chebyshevLevelEnd
-      };
       float chebyshevAmplitudes[chebyshevLevelEnd];
       int modRatioNum = 1;
       int modRatioDen = 1;

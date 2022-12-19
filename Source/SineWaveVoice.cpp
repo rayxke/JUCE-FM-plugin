@@ -16,47 +16,37 @@ SineWaveVoice::SineWaveVoice() {}
       return dynamic_cast<SineWaveSound*> (sound) != nullptr;
   }
 
-  void SineWaveVoice::startNote (int midiNoteNumber, float velocity,
-                  SynthesiserSound* /*sound*/, int)
-  {
+void SineWaveVoice::startNote (int midiNoteNumber, float velocity,
+              SynthesiserSound* /*sound*/, int)
+{
+    adsrParams.decay = 10.0f;
+    
+    currentAngle = 0.0;
+    level = velocity * adsrParams.sustain;
+    release = 0.0;
+    attack = .1;
   
-      
-     
-      //release  = release_param;
-      
-      /*adsrParams.attack = attack_param;//0.01f;
-      adsrParams.sustain = sustain_param;//1.0f;
-      adsrParams.release = release_param;//0.01f;
-      */
-      adsrParams.decay = 10.0f;
+    mrelease = 0.0;
+    mattack = .1;
 
-      currentAngle = 0.0;
-      level = velocity * adsrParams.sustain;
-      release = 0.0;
-      attack = .1;
-      
-      mrelease = 0.0;
-      mattack = .1;
+    if (modRatioDen == 0) {
+        modRatio = 1.0;
+    }
+    else {
+        modRatio = (float(modRatioNum) / float(modRatioDen));
+    }
+    auto cyclesPerSecond = MidiMessage::getMidiNoteInHertz (midiNoteNumber);
+    auto cyclesPerSample = (cyclesPerSecond)/ getSampleRate();
 
-      if (modRatioDen == 0) {
-          modRatio = 1.0;
-      } else {
-          modRatio = (float(modRatioNum) / float(modRatioDen));
-      }
-      auto cyclesPerSecond = MidiMessage::getMidiNoteInHertz (midiNoteNumber);
-      auto cyclesPerSample = (cyclesPerSecond)/ getSampleRate();
-
-      angleDelta = cyclesPerSample * MathConstants<double>::twoPi;
-      int modFreq = int(cyclesPerSecond * modRatio); //new
-      // float freqDev = 10; //new
-      
-      auto modCyclesPerSample = modFreq / getSampleRate(); //new
-      modAngleDelta = modCyclesPerSample * MathConstants<double>::twoPi;//new
-      modIndex = freqDev / float(modFreq); //new
-      adsr.noteOn();
-      
-  }
-float SineWaveVoice::chebyshevCalulation(int chebyshev, float x)
+    angleDelta = cyclesPerSample * MathConstants<double>::twoPi;
+    int modFreq = int(cyclesPerSecond * modRatio); //new
+  
+    auto modCyclesPerSample = modFreq / getSampleRate(); //new
+    modAngleDelta = modCyclesPerSample * MathConstants<double>::twoPi;//new
+    modIndex = freqDev / float(modFreq); //new
+    adsr.noteOn();
+}
+float SineWaveVoice::chebyshevCalculation(int chebyshev, float x)
 {
     if (chebyshev == chebyshevLevel0)
     {
@@ -68,9 +58,19 @@ float SineWaveVoice::chebyshevCalulation(int chebyshev, float x)
     }
     else
     {
-        return 2 * x * chebyshevCalulation(chebyshev-1, x) - chebyshevCalulation(chebyshev-2, x);
+        return 2 * x * chebyshevCalculation(chebyshev-1, x) - chebyshevCalculation(chebyshev-2, x);
         
     }
+}
+
+float SineWaveVoice::getChebyshevSignal(float currentSample)
+{
+    float chebyshevSignal = 0.0;
+    for (auto chebyshevLevel = (int) chebyshevLevel1; chebyshevLevel < chebyshevLevelEnd; chebyshevLevel++)
+    {
+        chebyshevSignal += chebyshevAmplitudes[chebyshevLevel] * chebyshevCalculation(chebyshevLevel, currentSample);
+    }
+    return chebyshevSignal;
 }
   void SineWaveVoice::stopNote (float /*velocity*/, bool allowTailOff)
   {
@@ -94,209 +94,145 @@ float SineWaveVoice::chebyshevCalulation(int chebyshev, float x)
       adsr.noteOff();
   }
 
-  void SineWaveVoice::pitchWheelMoved (int /*newValue*/)
-  {
-      // not implemented for the purposes of this demo!
-  }
+void SineWaveVoice::pitchWheelMoved (int /*newValue*/)
+{
+  // not implemented for the purposes of this demo!
+}
   
   
-  void SineWaveVoice::controllerMoved (int paramNum, int value)
-  {
-      
-      if (paramNum == 0) { //freqDev
-          freqDev = value;
-      } else if (paramNum == 1) {
-          modRatioNum = value;
-      } else if (paramNum == 2) {
-          modRatioDen = value;
-      } else if (paramNum == 3) {
-          adsrParams.attack = float(value / 100.0f);
-      } else if (paramNum == 4) {
-          adsrParams.sustain = 0.185 * float(value / 100.0f) ;
-      } else if (paramNum == 5) {
-          adsrParams.release    = float(value / 100.0f);
-      } else if (paramNum == 6) {
-          modAdsrParams.attack = float(value / 100.0f);
-     } else if (paramNum == 7) {
-         modAdsrParams.sustain = float(value / 100.0f) ;
-     } else if (paramNum == 8) {
-         modAdsrParams.release    = float(value / 100.0f);
-     } else if (paramNum == 14) {
-         chebyshevAmplitudes[chebyshevLevel1] = float(value / 100.0f);
-     } else if (paramNum == 15) {
-         chebyshevAmplitudes[chebyshevLevel2] = float(value / 100.0f);
-     } else if (paramNum == 16) {
-         chebyshevAmplitudes[chebyshevLevel3] = float(value / 100.0f);
-     } else if (paramNum == 17) {
-         chebyshevAmplitudes[chebyshevLevel4] = float(value / 100.0f);
-     } else if (paramNum == 18) {
-         chebyshevAmplitudes[chebyshevLevel5] = float(value / 100.0f);
-     }  else if (paramNum == 19) {
-         chebyshevAmplitudes[chebyshevLevel6] = float(value / 100.0f);
-     }  else if (paramNum == 20) {
-         chebyshevAmplitudes[chebyshevLevel7] = float(value / 100.0f);
-     }  else if (paramNum == 21) {
-         chebyshevAmplitudes[chebyshevLevel8] = float(value / 100.0f);
-     }  else if (paramNum == 22) {
-         chebyshevAmplitudes[chebyshevLevel9] = float(value / 100.0f);
-     }
-      
-      /*else if (paramNum == 9) {
-         if (value == 0) {
-             att_is_exp = 1;
-         } else {
-             att_is_exp = 0;
-         }
-         if (value == 0) {
-             dec_is_exp = 1;
-         } else {
-             dec_is_exp = 0;
-         }
-     } else if (paramNum == 10) {
-         if (value == 1) {
-             att_is_exp = 1;
-         } else {
-             att_is_exp = 0;
-         }
-         if (value == 1) {
-             dec_is_exp = 1;
-         } else {
-             dec_is_exp = 0;
-         }
-        
-      dec_is_exp = value;
-     } else if (paramNum == 11) {
-             
-         if (value == 2) {
-             dec_is_exp = 0;
-         } else {
-             att_is_exp = 1;
-         }
-         if (value == 2) {
-             modatt_is_exp = 1;
-         } else {
-             modatt_is_exp = 0;
-         }
-     } else if (paramNum == 12) {
-         if (value == 3) {
-             att_is_exp = 1;
-         } else {
-             att_is_exp = 0;
-         }
-         if (value == 3) {
-             moddec_is_exp = 1;
-         } else {
-             moddec_is_exp = 0;
-         }
-     }*/
-  }
+void SineWaveVoice::controllerMoved (int paramNum, int value)
+{
+    if (paramNum == 0) {
+        freqDev = value;
+    } else if (paramNum == 1) {
+        modRatioNum = value;
+    } else if (paramNum == 2) {
+        modRatioDen = value;
+    } else if (paramNum == 3) {
+        adsrParams.attack = float(value / 100.0f);
+    } else if (paramNum == 4) {
+        adsrParams.sustain = 0.185 * float(value / 100.0f) ;
+    } else if (paramNum == 5) {
+        adsrParams.release    = float(value / 100.0f);
+    } else if (paramNum == 6) {
+        modAdsrParams.attack = float(value / 100.0f);
+    } else if (paramNum == 7) {
+        modAdsrParams.sustain = float(value / 100.0f) ;
+    } else if (paramNum == 8) {
+        modAdsrParams.release    = float(value / 100.0f);
+    } else if (paramNum == 14) {
+        chebyshevAmplitudes[chebyshevLevel1] = float(value / 100.0f);
+    } else if (paramNum == 15) {
+        chebyshevAmplitudes[chebyshevLevel2] = float(value / 100.0f);
+    } else if (paramNum == 16) {
+        chebyshevAmplitudes[chebyshevLevel3] = float(value / 100.0f);
+    } else if (paramNum == 17) {
+        chebyshevAmplitudes[chebyshevLevel4] = float(value / 100.0f);
+    } else if (paramNum == 18) {
+        chebyshevAmplitudes[chebyshevLevel5] = float(value / 100.0f);
+    }  else if (paramNum == 19) {
+        chebyshevAmplitudes[chebyshevLevel6] = float(value / 100.0f);
+    }  else if (paramNum == 20) {
+        chebyshevAmplitudes[chebyshevLevel7] = float(value / 100.0f);
+    }  else if (paramNum == 21) {
+        chebyshevAmplitudes[chebyshevLevel8] = float(value / 100.0f);
+    }  else if (paramNum == 22) {
+        chebyshevAmplitudes[chebyshevLevel9] = float(value / 100.0f);
+    }
+}
 
-  void SineWaveVoice::renderNextBlock (AudioBuffer<float>& outputBuffer, int startSample, int numSamples)
-  {
-      if (angleDelta != 0.0)
-      {
-         
+void SineWaveVoice::setAttack()
+{
+    if (attack >= .999)
+    {
+        attack = 1.0;
+    }
+    else
+    {
+        if (adsrParams.attack != 0.0)
+        {
+            if (att_is_exp)
+                attack *= 1.0 + pow(.1, adsrParams.attack * 5.0);
+            else
+                attack +=  pow(.1, adsrParams.attack * 5.0);
+        }
+        else
+        {
+            attack = 1.0;
+        }
+    }
+    
+    if (mattack >= .999)
+    {
+        mattack = 1.0;
+    }
+    else
+    {
+        if (modAdsrParams.attack != 0.0)
+            mattack *= 1.0 + pow(.1, modAdsrParams.attack * 5.0);
+        else
+            mattack = 1.0;
+    }
+}
+void SineWaveVoice::setRelease()
+{
+    if (adsrParams.release != 0) {
+        release *= 1.0 - pow(.1, adsrParams.release * 5.0) ;
+    } else {
+        release *= 1.0;
+    }
+    
+    if (modAdsrParams.release != 0) {
+        mrelease *= 1.0 - pow(.1, modAdsrParams.release * 5.0) ;
+    } else {
+        mrelease = 1.0;
+    }
+}
+void SineWaveVoice::renderNextBlock (AudioBuffer<float>& outputBuffer, int startSample, int numSamples)
+{
+    if (angleDelta != 0.0)
+    {
         if (release > 0.0)
-          {
-              while (--numSamples >= 0)
-              {
-                  // auto currentSample = (float) (sin (currentAngle) * level * release);
-                  auto currentSample = (float) (sin (currentAngle + mrelease * mattack * modAdsrParams.sustain * modIndex * sin( modCurrentAngle ) ) );
-                  
-                  //Add Chebyshev Polynomials to the Signal
-                  auto chebyshevSignal = (float) 0.0;
-                  for (auto chebyshevLevel = (int) chebyshevLevel1; chebyshevLevel < chebyshevLevelEnd; chebyshevLevel++)
-                  {
-                      chebyshevSignal += chebyshevAmplitudes[chebyshevLevel] * chebyshevCalulation(chebyshevLevel, currentSample);
-                  }
-                  
-                  currentSample = (float) ( level * release * attack *  chebyshevSignal);
-
-                  for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
-                      outputBuffer.addSample (i, startSample, currentSample);
-
-                  currentAngle += angleDelta;
-                  modCurrentAngle += modAngleDelta;
-                  ++startSample;
-
-                  if (adsrParams.release != 0) {
-                      release *= 1.0 - pow(.1, adsrParams.release * 5.0) ;
-                  } else {
-                      release *= 1.0;
-                  }
-                  
-                  if (modAdsrParams.release != 0) {
-                      mrelease *= 1.0 - pow(.1, modAdsrParams.release * 5.0) ;
-                  } else {
-                      mrelease = 1.0;
-                  }
-                  if (release <= 0.005)
-                  {
-                      // tells the synth that this voice has stopped
-                      clearCurrentNote();
-
-                      angleDelta = 0.0;
-                      break;
-                  }
-              }
-          }
-          else
-          {
-              while (--numSamples >= 0)
-              {
-                  if (attack >= .999)
-                  {
-                      attack = 1.0;
-                  } else {
-                      if (adsrParams.attack != 0.0){
-                          if (att_is_exp) {
-                              attack *= 1.0 + pow(.1, adsrParams.attack * 5.0);
-                          } else {
-                              attack +=  pow(.1, adsrParams.attack * 5.0);
-                          }
-                      } else {
-                          attack = 1.0;
-                      }
-                  }
-                  
-                  if (mattack >= .999)
-                  {
-                      mattack = 1.0;
-                  } else {
-                      if (modAdsrParams.attack != 0.0){
-                          mattack *= 1.0 + pow(.1, modAdsrParams.attack * 5.0);
-                      } else {
-                          mattack = 1.0;
-                      }
-                  }
-                  
-                  
-                  
-                  //auto currentSample = (float) (sin (currentAngle )) * level);
-                  auto currentSample = (float) (sin (currentAngle  +  mattack * modAdsrParams.sustain * modIndex * sin( modCurrentAngle ) ) );
-                  
-                  //Add Chebyshev Polynomials to the Signal
-                  auto chebyshevSignal = (float) 0.0;
-                  for (auto chebyshevLevel = (int) chebyshevLevel1; chebyshevLevel < chebyshevLevelEnd; chebyshevLevel++)
-                  {
-                      chebyshevSignal += chebyshevAmplitudes[chebyshevLevel] * chebyshevCalulation(chebyshevLevel, currentSample);
-                  }
-                  
-                  currentSample = (float) ( level * release * attack *  chebyshevSignal);
-                  
-                  for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
-                      outputBuffer.addSample (i, startSample, currentSample);
-
-                  currentAngle += angleDelta;
-                  modCurrentAngle += modAngleDelta;
-
-                  ++startSample;
-
-                  
-              }
-          }
-          
-          //adsr.setParameters(adsrParams);
-          //adsr.applyEnvelopeToBuffer(outputBuffer, startSample, numSamples);
-      }
-  }
+        {
+            while (--numSamples >= 0)
+            {
+                auto currentSample = (float) (sin (currentAngle + mrelease *
+                                                 mattack * modAdsrParams.sustain *
+                                                 modIndex * sin( modCurrentAngle ) ) );
+                //Add Chebyshev Polynomials to the Signal
+                auto chebyshevSignal = getChebyshevSignal(currentSample);
+                currentSample = (float) ( level * release * attack *  chebyshevSignal);
+                for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
+                  outputBuffer.addSample (i, startSample, currentSample);
+                currentAngle += angleDelta;
+                modCurrentAngle += modAngleDelta;
+                ++startSample;
+                setRelease();
+                if (release <= 0.005)
+                {
+                    // tells the synth that this voice has stopped
+                    clearCurrentNote();
+                    angleDelta = 0.0;
+                    break;
+                }
+                
+            }
+            
+        }
+        else
+        {
+            while (--numSamples >= 0)
+            {
+                setAttack();
+                auto currentSample = (float) (sin (currentAngle  +  mattack * modAdsrParams.sustain * modIndex * sin( modCurrentAngle ) ) );
+                auto chebyshevSignal = getChebyshevSignal(currentSample);
+                currentSample = (float) ( level * release * attack *  chebyshevSignal);
+                for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
+                    outputBuffer.addSample (i, startSample, currentSample);
+                currentAngle += angleDelta;
+                modCurrentAngle += modAngleDelta;
+                ++startSample;
+            }
+        }
+    }
+}

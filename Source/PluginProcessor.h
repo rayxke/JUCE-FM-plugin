@@ -15,12 +15,12 @@
 class JuceDemoPluginAudioProcessor  : public AudioProcessor
 {
 public:
-//==============================================================================
+    //==============================================================================
     JuceDemoPluginAudioProcessor();
 
     ~JuceDemoPluginAudioProcessor() override = default;
 
-//==============================================================================
+    //==============================================================================
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
 
     void prepareToPlay (double newSampleRate, int /*samplesPerBlock*/) override;
@@ -30,40 +30,40 @@ public:
     void reset() override;
 
 
-//==============================================================================
+    //==============================================================================
     void processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) override;
 
     void processBlock (AudioBuffer<double>& buffer, MidiBuffer& midiMessages) override;
 
-//==============================================================================
+    //==============================================================================
     bool hasEditor() const override;
 
     AudioProcessorEditor* createEditor() override;
 
-//==============================================================================
+    //==============================================================================
     const String getName() const override;
     bool acceptsMidi() const override;
     bool producesMidi() const override;
     double getTailLengthSeconds() const override;
 
-//==============================================================================
+    //==============================================================================
     int getNumPrograms() override;
     int getCurrentProgram() override;
     void setCurrentProgram (int) override;
     const String getProgramName (int) override;
     void changeProgramName (int, const String&) override;
 
-//==============================================================================
+    //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
 
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-//==============================================================================
+    //==============================================================================
     void updateTrackProperties (const TrackProperties& properties) override;
 
     TrackProperties getTrackProperties() const;
     
-//==============================================================================
+    //==============================================================================
     template <typename FloatType>
     void process (AudioBuffer<FloatType>& buffer, MidiBuffer& midiMessages, AudioBuffer<FloatType>& delayBuffer);
     
@@ -72,10 +72,6 @@ public:
 
     template <typename FloatType>
     void applyDelay (AudioBuffer<FloatType>& buffer, AudioBuffer<FloatType>& delayBuffer, float delayLevel);
-    /*template <typename FloatType>
-    
-    void applyChebyshev (AudioBuffer<FloatType>& buffer, AudioBuffer<FloatType>& delayBuffer, float chebyshevLevel);*/
-    
 
     void initialiseSynth();
 
