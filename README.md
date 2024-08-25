@@ -1,80 +1,44 @@
 # JUCE-FM Plugin
+[![](https://github.com/rayxke/JUCE-FM-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/rayxke/JUCE-FM-plugin/actions)
   
 This is an FM Synthesizer that can be run as a plugin or as a Standalone app. It supports basic aspects of FM Synthesis.   
     
-## Installation
-### Mac OS
-Step 1: Installations
+## Build
 
-- Install [JUCE](https://juce.com) from source
-- Install [XCode](https://developer.apple.com/xcode/)
+[CMake](https://cmake.org) is required to build. Please download if not already installed.
 
-Step 2: Clone The Repo
-```
-git clone https://github.com/rayxke/JUCE-FM-plugin
-```
-
-
-Step 3: Using the Projucer open the "FM Plugin.jucer" file.
-
-
-Step 4: Click the export button in the [Projucer](https://juce.com/discover/projucer)
-
-Step 5: Click the build button in XCode
-
-Step 6: Find the build file
-- Find build file in this subdirectory within your project folder:
-```
-cd JUCE\ Projects/JUCE-FM-plugin/Builds/MacOSX/build/Debug/
-```
-- The file should be named "FM Plugin.component" (AU Format for DAWS)
-- "FM Plugin.app" is the standalone version of the app
-
-Step 7: Copy this file into:
-```
-/Library/Audio/Plug-Ins/Components
-```
-Step 8: Open Logic or garage band. (Restart if already open)
-- Check available plugins for "3rd party" plugins. Open this for testing of plugin.
-
-[Walk thru link](https://producersociety.com/plug-ins-garageband/) for step 8 
-
-### Windows
-
-Step 1: Installations
-
-- Install [JUCE](https://juce.com) from source
-- Install Visual Studio (Not Visual Studio Code!)
-
-Step 2: Download Code
+Clone the repo
 
 ```
-git clone https://github.com/rayxke/JUCE-FM-plugin
+git clone https://github.com/rayxke/vocal-synth
 ```
 
-Step 3: Creating Project
+Change to project directory
 
-- Open Visual Studio
-- continue without code --> file --> new --> project from existing code
-- Select the folder in which your code is located in
-- Build or press the green play arrow (this should throw an error at first, but we need to have a build file)
+```
+cd vocal-synth
+```
 
-Step 4: Open in JUCE
+Populate [JUCE](https://juce.com)
 
-- Open JUCE
-- Click "Open"
-- Select a file from your project folder
-- Set "Selected exporter" to Visual Studio 
-- Click the Visual Studio icon
+```
+git submodule update --init
+```
 
-Step 5: Run code
+Then build with CMake
 
-- Click the green play arrow
+```
+cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
+```
+This will result in a release build in the build directory.
 
-### Linux
+For more detailed instructions please refer to the [JUCE CMake API](https://github.com/juce-framework/JUCE/blob/master/docs/CMake%20API.md)
 
-TBD
-
+## Contributing
+- Fork the repository
+- Make your changes in a separate branch
+- Open a pull request
 
 ## FM Synthesizer Links
 
