@@ -9,10 +9,12 @@
 #ifndef WaveshaperChart_h
 #define WaveshaperChart_h
 #endif /* WaveshaperChart_h */
+#define _USE_MATH_DEFINES
 
 #pragma once
 #include <JuceHeader.h>
 #include "SineWaveVoice.h"
+
 
 
 class WaveshaperChart  : public Component
