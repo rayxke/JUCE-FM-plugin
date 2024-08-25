@@ -1,8 +1,13 @@
 # JUCE-FM Plugin
 [![](https://github.com/rayxke/JUCE-FM-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/rayxke/JUCE-FM-plugin/actions)
   
-This is an FM Synthesizer that can be run as a plugin or as a Standalone app. It supports basic aspects of FM Synthesis.   
-    
+## Overview
+
+This is an FM Synthesizer that can be run as a plugin or as a Standalone app. It supports basic aspects of FM Synthesis. 
+<div align="center">
+<img align="center" src="https://github.com/user-attachments/assets/bba66f2a-84b9-46ba-b879-09f8decf96a0" border-radius="50%" width="800px" height="600px"/>
+</div>
+
 ## Build
 
 [CMake](https://cmake.org) is required to build. Please download if not already installed.
