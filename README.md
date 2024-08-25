@@ -10,13 +10,13 @@ This is an FM Synthesizer that can be run as a plugin or as a Standalone app. It
 Clone the repo
 
 ```
-git clone https://github.com/rayxke/vocal-synth
+git clone https://github.com/rayxke/JUCE-FM-plugin
 ```
 
 Change to project directory
 
 ```
-cd vocal-synth
+cd JUCE-FM-plugin
 ```
 
 Populate [JUCE](https://juce.com)
