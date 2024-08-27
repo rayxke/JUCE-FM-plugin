@@ -68,12 +68,13 @@ float SineWaveVoice::getChebyshevSignal(float currentSample)
     float chebyshevSignal = 0.0;
     for (auto chebyshevLevel = (int) chebyshevLevel1; chebyshevLevel < chebyshevLevelEnd; chebyshevLevel++)
     {
-        chebyshevSignal += chebyshevAmplitudes[chebyshevLevel] * chebyshevCalculation(chebyshevLevel, currentSample);
+        chebyshevSignal += (2*chebyshevAmplitudes[chebyshevLevel]-1) * chebyshevCalculation(chebyshevLevel, currentSample);
     }
     return chebyshevSignal;
 }
-  void SineWaveVoice::stopNote (float /*velocity*/, bool allowTailOff)
-  {
+
+void SineWaveVoice::stopNote (float /*velocity*/, bool allowTailOff)
+{
       if (allowTailOff)
       {
           // start a tail-off by setting this flag. The render callback will pick up on
@@ -92,7 +93,7 @@ float SineWaveVoice::getChebyshevSignal(float currentSample)
           angleDelta = 0.0;
       }
       adsr.noteOff();
-  }
+}
 
 void SineWaveVoice::pitchWheelMoved (int /*newValue*/)
 {
@@ -174,6 +175,7 @@ void SineWaveVoice::setAttack()
             mattack = 1.0;
     }
 }
+
 void SineWaveVoice::setRelease()
 {
     if (adsrParams.release != 0) {
@@ -188,6 +190,7 @@ void SineWaveVoice::setRelease()
         mrelease = 1.0;
     }
 }
+
 void SineWaveVoice::renderNextBlock (AudioBuffer<float>& outputBuffer, int startSample, int numSamples)
 {
     if (angleDelta != 0.0)
