@@ -303,13 +303,13 @@ void JuceDemoPluginAudioProcessor::process (AudioBuffer<FloatType>& buffer, Midi
         //This warrants an explanation....
         for (int j = 9; j < 13; j++){
             if (lexenv < 2) {
-                if (j % 2== lexenv) {
+                if (approximatelyEqual(static_cast<float>(j%2), lexenv)) {
                     (synth.getVoice(i))->controllerMoved(j, lexenv);
                 } else {
                     (synth.getVoice(i))->controllerMoved(j, lexenv);
                 }
             } else {
-                if (j % 2 == lexmenv) {
+                if (approximatelyEqual(static_cast<float>(j%2), lexenv)) {
                     (synth.getVoice(i))->controllerMoved(j, lexmenv);
                 } else {
                     (synth.getVoice(i))->controllerMoved(j, lexmenv);
