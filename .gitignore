@@ -13,5 +13,12 @@ node_modules
 # Ignore SASS config files
 .sass-cache
 
-#Ignore Build Directory
+# Ignore Build Directory (CMake & Others)
 /build
+/bin
+/lib
+CMakeFiles
+CMakeCache.txt
+*.o
+*.exp
+*.swp
