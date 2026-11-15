@@ -83,10 +83,13 @@ public:
                                             "Presets"};
         
         
+        // Attachments ordered to match the constructor initialization list
+        AudioProcessorValueTreeState::SliderAttachment gainAttachment, delayAttachment, modAttachment;
+        AudioProcessorValueTreeState::ComboBoxAttachment iNumAttachment, iDenAttachment;
+        AudioProcessorValueTreeState::SliderAttachment attackAttachment, sustainAttachment, releaseAttachment, mattackAttachment, msustainAttachment, mreleaseAttachment;
+        AudioProcessorValueTreeState::ComboBoxAttachment iEnvAttachment, iModEnvAttachment, presetsAttachment;
+        AudioProcessorValueTreeState::SliderAttachment chebyshevAmpAttachment1, chebyshevAmpAttachment2, chebyshevAmpAttachment3, chebyshevAmpAttachment4, chebyshevAmpAttachment5, chebyshevAmpAttachment6, chebyshevAmpAttachment7, chebyshevAmpAttachment8, chebyshevAmpAttachment9;
         
-        AudioProcessorValueTreeState::SliderAttachment gainAttachment, delayAttachment, modAttachment, attackAttachment, sustainAttachment, releaseAttachment, mattackAttachment, msustainAttachment, mreleaseAttachment, chebyshevAmpAttachment1, chebyshevAmpAttachment2, chebyshevAmpAttachment3, chebyshevAmpAttachment4, chebyshevAmpAttachment5, chebyshevAmpAttachment6, chebyshevAmpAttachment7, chebyshevAmpAttachment8, chebyshevAmpAttachment9;
-        
-        AudioProcessorValueTreeState::ComboBoxAttachment iNumAttachment, iDenAttachment, iEnvAttachment, iModEnvAttachment, presetsAttachment;
         Colour backgroundColour;
 
         // these are used to persist the UI's size - the values are stored along with the
