@@ -80,7 +80,7 @@ void SineWaveVoice::stopNote (float /*velocity*/, bool allowTailOff)
           // start a tail-off by setting this flag. The render callback will pick up on
           // this and do a fade out, calling clearCurrentNote() when it's finished.
 
-          if (release == 0.0) {// we only need to begin a tail-off if it's not already doing so - the
+          if (exactlyEqual(release, 0.0)) {// we only need to begin a tail-off if it's not already doing so - the
                               // stopNote method could be called more than once.
               release = adsrParams.release;
           }
@@ -150,7 +150,7 @@ void SineWaveVoice::setAttack()
     }
     else
     {
-        if (adsrParams.attack != 0.0)
+        if (!exactlyEqual(adsrParams.attack, 0.0f))
         {
             if (att_is_exp)
                 attack *= 1.0 + pow(.1, adsrParams.attack * 5.0);
@@ -169,7 +169,7 @@ void SineWaveVoice::setAttack()
     }
     else
     {
-        if (modAdsrParams.attack != 0.0)
+        if (!exactlyEqual(modAdsrParams.attack, 0.0f))
             mattack *= 1.0 + pow(.1, modAdsrParams.attack * 5.0);
         else
             mattack = 1.0;
@@ -178,13 +178,13 @@ void SineWaveVoice::setAttack()
 
 void SineWaveVoice::setRelease()
 {
-    if (adsrParams.release != 0) {
+    if (!exactlyEqual(adsrParams.release, 0.0f)) {
         release *= 1.0 - pow(.1, adsrParams.release * 5.0) ;
     } else {
         release *= 1.0;
     }
     
-    if (modAdsrParams.release != 0) {
+    if (!exactlyEqual(modAdsrParams.release, 0.0f)) {
         mrelease *= 1.0 - pow(.1, modAdsrParams.release * 5.0) ;
     } else {
         mrelease = 1.0;
@@ -193,7 +193,7 @@ void SineWaveVoice::setRelease()
 
 void SineWaveVoice::renderNextBlock (AudioBuffer<float>& outputBuffer, int startSample, int numSamples)
 {
-    if (angleDelta != 0.0)
+    if (!exactlyEqual(angleDelta, 0.0))
     {
         if (release > 0.0)
         {
