@@ -26,7 +26,7 @@ void WaveshaperChart::paint(Graphics &g){
     auto chartArea = getLocalBounds().reduced(10, 50);
     g.drawRect(chartArea);
     auto w = chartArea.getWidth();
-    auto h = chartArea.getHeight();
+    //auto h = chartArea.getHeight();
     auto startx = chartArea.getX();
     auto starty = chartArea.getCentreY();
     g.setColour (getLookAndFeel().findColour
@@ -67,9 +67,9 @@ void WaveshaperChart::setTitle(String titleString)
     title = titleString;
 }
 
-void WaveshaperChart::setChebyshevAmplitudes(float amplitude, SineWaveVoice::ChebyshevLevels chebyshevLevel)
+void WaveshaperChart::setChebyshevAmplitudes(float amplitude, SineWaveVoice::ChebyshevLevels level)
 {
-    chebyshevAmplitudes[chebyshevLevel] = amplitude;
+    chebyshevAmplitudes[level] = amplitude;
     repaint();
 }
 void WaveshaperChart::plotChebyshev(float min, float max, ChartSettingsEnum setting)
@@ -98,9 +98,9 @@ float WaveshaperChart::chebyshevCalculation(int chebyshev, float x)
 float WaveshaperChart::getChebyshevSignal(float currentSample)
 {
     float chebyshevSignal = 0.0;
-    for (auto chebyshevLevel = (int) SineWaveVoice::chebyshevLevel1; chebyshevLevel < SineWaveVoice::chebyshevLevelEnd; chebyshevLevel++)
+    for (auto level = (int) SineWaveVoice::chebyshevLevel1; level < SineWaveVoice::chebyshevLevelEnd; level++)
     {
-        chebyshevSignal += chebyshevAmplitudes[chebyshevLevel] * chebyshevCalculation(chebyshevLevel, currentSample);
+        chebyshevSignal += chebyshevAmplitudes[level] * chebyshevCalculation(level, currentSample);
     }
     return chebyshevSignal;
 }

@@ -210,8 +210,8 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     const float flexBoxWidth  = getWidth()/ 9;
     const float flexBoxHeight  = getHeight()/ 9;
     const Font  myFont = Font(getHeight()/40);
-    const int textBoxWidth  = getWidth()/20;
-    const int textBoxHeight = myFont.getHeight();
+    const int boxWidth  = getWidth()/20;
+    const int boxHeight = myFont.getHeight();
     auto appBounds  = getLocalBounds();
     
     container.setBounds(0, 0, getWidth(), getHeight());
@@ -254,7 +254,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     for (int i = (int) gainSlider; i < numberOfSliders; i++)
     {
         sliderLabels[i].setFont(myFont);
-        sliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, true, textBoxWidth, textBoxHeight);
+        sliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, true, boxWidth, boxHeight);
         sliders[i].setNumDecimalPlacesToDisplay(0);
         sliderFlexBox.items.add(juce::FlexItem (sliders[i]).withMinWidth (flexBoxWidth).withMinHeight (flexBoxHeight));
     }
@@ -262,7 +262,7 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     for (int i= chebyshev1; i < numberOfChebyshevs; i++)
     {
         chebyshevLabels[i].setFont(myFont);
-        chebyshevAmpSliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, textBoxWidth, textBoxHeight);
+        chebyshevAmpSliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, boxWidth, boxHeight);
         chebyshevFlexBox.items.add(juce::FlexItem (chebyshevAmpSliders[i]).withMinWidth (flexBoxWidth).withMinHeight (flexBoxHeight));
         
     }
