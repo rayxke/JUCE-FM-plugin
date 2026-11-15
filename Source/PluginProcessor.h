@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <JuceHeader.h>
+#include "ParameterGroups.h"
 #include "SpinLockedPosInfo.h"
 
 /** As the name suggest, this class does the actual audio processing. */
