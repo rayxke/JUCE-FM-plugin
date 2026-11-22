@@ -12,13 +12,13 @@
 #include "SpinLockedPosInfo.h"
 
 /** As the name suggest, this class does the actual audio processing. */
-class JuceDemoPluginAudioProcessor  : public AudioProcessor
+class FMPluginProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    JuceDemoPluginAudioProcessor();
+    FMPluginProcessor();
 
-    ~JuceDemoPluginAudioProcessor() override = default;
+    ~FMPluginProcessor() override = default;
 
     //==============================================================================
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
@@ -105,5 +105,5 @@ public:
     // Our plug-in's current state
     AudioProcessorValueTreeState state;
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceDemoPluginAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FMPluginProcessor)
 };

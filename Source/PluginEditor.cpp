@@ -10,7 +10,7 @@
 
 
 
-JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor& owner)
+FMPluginEditor::FMPluginEditor (FMPluginProcessor& owner)
    : AudioProcessorEditor       (owner),
      midiKeyboard               (owner.keyboardState, MidiKeyboardComponent::horizontalKeyboard),
      gainAttachment             (owner.state, "gain",  sliders[gainSlider]),
@@ -26,7 +26,6 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
      mreleaseAttachment         (owner.state, "mrelease", sliders[mreleaseSlider]),
      iEnvAttachment             (owner.state, "expLineEnv", comboBoxes[iEnvBox]),
      iModEnvAttachment          (owner.state, "expLinModEnv", comboBoxes[iModBox]),
-     presetsAttachment          (owner.state, "presets", comboBoxes[presetsBox]),
      chebyshevAmpAttachment1    (owner.state, "chebyshevAmp1", chebyshevAmpSliders[chebyshev1]),
      chebyshevAmpAttachment2    (owner.state, "chebyshevAmp2", chebyshevAmpSliders[chebyshev2]),
      chebyshevAmpAttachment3    (owner.state, "chebyshevAmp3", chebyshevAmpSliders[chebyshev3]),
@@ -178,8 +177,8 @@ JuceDemoPluginAudioProcessorEditor::JuceDemoPluginAudioProcessorEditor (JuceDemo
    
    
 
-JuceDemoPluginAudioProcessorEditor::~JuceDemoPluginAudioProcessorEditor(){}
-void JuceDemoPluginAudioProcessorEditor::buttonClicked (juce::Button* button)
+FMPluginEditor::~FMPluginEditor(){}
+void FMPluginEditor::buttonClicked (juce::Button* button)
 {
     if (button == &buttons[resetEnvelope])
     {
@@ -199,13 +198,13 @@ void JuceDemoPluginAudioProcessorEditor::buttonClicked (juce::Button* button)
 }
 
 //===============================================================================
-void JuceDemoPluginAudioProcessorEditor::paint (Graphics& g)
+void FMPluginEditor::paint (Graphics& g)
 {
     g.setColour (backgroundColour);
     g.fillAll();
 }
 
-void JuceDemoPluginAudioProcessorEditor::resized()
+void FMPluginEditor::resized()
 {
     const float flexBoxWidth  = getWidth()/ 9;
     const float flexBoxHeight  = getHeight()/ 9;
@@ -289,17 +288,17 @@ void JuceDemoPluginAudioProcessorEditor::resized()
     
 }
 
-void JuceDemoPluginAudioProcessorEditor::timerCallback()
+void FMPluginEditor::timerCallback()
 {
     updateTimecodeDisplay (getProcessor().lastPosInfo.get());
 }
 
-void JuceDemoPluginAudioProcessorEditor::hostMIDIControllerIsAvailable (bool controllerIsAvailable)
+void FMPluginEditor::hostMIDIControllerIsAvailable (bool controllerIsAvailable)
 {
     midiKeyboard.setVisible (! controllerIsAvailable);
 }
 
-int JuceDemoPluginAudioProcessorEditor::getControlParameterIndex (Component& control)
+int FMPluginEditor::getControlParameterIndex (Component& control)
 {
     if (&control == &sliders[gainSlider])
         return 0;
@@ -308,7 +307,7 @@ int JuceDemoPluginAudioProcessorEditor::getControlParameterIndex (Component& con
     return -1;
 }
 
-void JuceDemoPluginAudioProcessorEditor::updateTrackProperties()
+void FMPluginEditor::updateTrackProperties()
 {
     auto trackColour = getProcessor().getTrackProperties().colour;
     auto& lf = getLookAndFeel();
@@ -320,14 +319,14 @@ void JuceDemoPluginAudioProcessorEditor::updateTrackProperties()
 
 
 //==============================================================================
-JuceDemoPluginAudioProcessor& JuceDemoPluginAudioProcessorEditor::getProcessor() const
+FMPluginProcessor& FMPluginEditor::getProcessor() const
 {
-    return static_cast<JuceDemoPluginAudioProcessor&> (processor);
+    return static_cast<FMPluginProcessor&> (processor);
 }
 
 //==============================================================================
 // quick-and-dirty function to format a timecode string
-String JuceDemoPluginAudioProcessorEditor::timeToTimecodeString (double seconds)
+String FMPluginEditor::timeToTimecodeString (double seconds)
 {
     auto millisecs = roundToInt (seconds * 1000.0);
     auto absMillisecs = std::abs (millisecs);
@@ -340,7 +339,7 @@ String JuceDemoPluginAudioProcessorEditor::timeToTimecodeString (double seconds)
 }
 
 // quick-and-dirty function to format a bars/beats string
-String JuceDemoPluginAudioProcessorEditor::quarterNotePositionToBarsBeatsString (double quarterNotes, int numerator, int denominator)
+String FMPluginEditor::quarterNotePositionToBarsBeatsString (double quarterNotes, int numerator, int denominator)
 {
     if (numerator == 0 || denominator == 0)
         return "1|1|000";
@@ -356,7 +355,7 @@ String JuceDemoPluginAudioProcessorEditor::quarterNotePositionToBarsBeatsString 
 }
 
 // Updates the text in our position label.
-void JuceDemoPluginAudioProcessorEditor::updateTimecodeDisplay (AudioPlayHead::CurrentPositionInfo pos)
+void FMPluginEditor::updateTimecodeDisplay (AudioPlayHead::CurrentPositionInfo pos)
 {
     MemoryOutputStream displayText;
 
@@ -374,7 +373,7 @@ void JuceDemoPluginAudioProcessorEditor::updateTimecodeDisplay (AudioPlayHead::C
     timecodeDisplayLabel.setText (displayText.toString(), dontSendNotification);
 }
 
-void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (juce::Slider * slider)
+void FMPluginEditor::sliderValueChanged (juce::Slider * slider)
 {
     
     for (int i= chebyshev1; i < numberOfChebyshevs; i++)
@@ -389,7 +388,7 @@ void JuceDemoPluginAudioProcessorEditor::sliderValueChanged (juce::Slider * slid
     
 }
 // called when the stored window size changes
-void JuceDemoPluginAudioProcessorEditor::valueChanged (Value&)
+void FMPluginEditor::valueChanged (Value&)
 {
     setSize (lastUIWidth.getValue(), lastUIHeight.getValue());
 }

@@ -46,7 +46,7 @@
  moduleFlags:           JUCE_STRICT_REFCOUNTEDPOINTER=1
 
  type:                  AudioProcessor
- mainClass:             JuceDemoPluginAudioProcessor
+ mainClass:             FMPluginProcessor
 
  useLocalCopy:          1
 
@@ -66,7 +66,7 @@
 #include <JuceHeader.h>
 
 //==============================================================================
-JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
+FMPluginProcessor::FMPluginProcessor()
     : AudioProcessor (getBusesProperties()),
       state (*this, nullptr, "state",
              { std::make_unique<AudioParameterFloat> ("gain",  "Gain",           NormalisableRange<float> (0.0f, 1.0f), 1.0f),
@@ -102,7 +102,7 @@ JuceDemoPluginAudioProcessor::JuceDemoPluginAudioProcessor()
 }
 
 //==============================================================================
-bool JuceDemoPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool FMPluginProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
     // Only mono/stereo and input/output must have same layout
     const auto& mainOutput = layouts.getMainOutputChannelSet();
@@ -123,7 +123,7 @@ bool JuceDemoPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& la
     return true;
 }
 
-void JuceDemoPluginAudioProcessor::prepareToPlay (double newSampleRate, int /*samplesPerBlock*/)
+void FMPluginProcessor::prepareToPlay (double newSampleRate, int /*samplesPerBlock*/)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
@@ -144,14 +144,14 @@ void JuceDemoPluginAudioProcessor::prepareToPlay (double newSampleRate, int /*sa
     reset();
 }
 
-void JuceDemoPluginAudioProcessor::releaseResources()
+void FMPluginProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
     keyboardState.reset();
 }
 
-void JuceDemoPluginAudioProcessor::reset()
+void FMPluginProcessor::reset()
 {
     // Use this method as the place to clear any delay lines, buffers, etc, as it
     // means there's been a break in the audio's continuity.
@@ -160,48 +160,48 @@ void JuceDemoPluginAudioProcessor::reset()
 }
 
 //==============================================================================
-void JuceDemoPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void FMPluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     jassert (! isUsingDoublePrecision());
     process (buffer, midiMessages, delayBufferFloat);
 }
 
-void JuceDemoPluginAudioProcessor::processBlock (AudioBuffer<double>& buffer, MidiBuffer& midiMessages)
+void FMPluginProcessor::processBlock (AudioBuffer<double>& buffer, MidiBuffer& midiMessages)
 {
     jassert (isUsingDoublePrecision());
     process (buffer, midiMessages, delayBufferDouble);
 }
 
 //==============================================================================
-bool JuceDemoPluginAudioProcessor::hasEditor() const                                  { return true; }
+bool FMPluginProcessor::hasEditor() const                                  { return true; }
 
-AudioProcessorEditor* JuceDemoPluginAudioProcessor::createEditor()
+AudioProcessorEditor* FMPluginProcessor::createEditor()
 {
-    return new JuceDemoPluginAudioProcessorEditor (*this);
+    return new FMPluginEditor (*this);
 }
 
 //==============================================================================
-const String JuceDemoPluginAudioProcessor::getName() const                            { return "AudioPluginDemo"; }
-bool JuceDemoPluginAudioProcessor::acceptsMidi() const                                 { return true; }
-bool JuceDemoPluginAudioProcessor::producesMidi() const                                { return true; }
-double JuceDemoPluginAudioProcessor::getTailLengthSeconds() const                      { return 0.0; }
+const String FMPluginProcessor::getName() const                            { return "AudioPluginDemo"; }
+bool FMPluginProcessor::acceptsMidi() const                                 { return true; }
+bool FMPluginProcessor::producesMidi() const                                { return true; }
+double FMPluginProcessor::getTailLengthSeconds() const                      { return 0.0; }
 
 //==============================================================================
-int JuceDemoPluginAudioProcessor::getNumPrograms()                                     { return 0; }
-int JuceDemoPluginAudioProcessor::getCurrentProgram()                                  { return 0; }
-void JuceDemoPluginAudioProcessor::setCurrentProgram (int)                             {}
-const String JuceDemoPluginAudioProcessor::getProgramName (int)                        { return {}; }
-void JuceDemoPluginAudioProcessor::changeProgramName (int, const String&)              {}
+int FMPluginProcessor::getNumPrograms()                                     { return 0; }
+int FMPluginProcessor::getCurrentProgram()                                  { return 0; }
+void FMPluginProcessor::setCurrentProgram (int)                             {}
+const String FMPluginProcessor::getProgramName (int)                        { return {}; }
+void FMPluginProcessor::changeProgramName (int, const String&)              {}
 
 //==============================================================================
-void JuceDemoPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
+void FMPluginProcessor::getStateInformation (MemoryBlock& destData)
 {
     // Store an xml representation of our state.
     if (auto xmlState = state.copyState().createXml())
         copyXmlToBinary (*xmlState, destData);
 }
 
-void JuceDemoPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void FMPluginProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // Restore our plug-in's state from the xml representation stored in the above
     // method.
@@ -210,7 +210,7 @@ void JuceDemoPluginAudioProcessor::setStateInformation (const void* data, int si
 }
 
 //==============================================================================
-void JuceDemoPluginAudioProcessor::updateTrackProperties (const TrackProperties& properties)
+void FMPluginProcessor::updateTrackProperties (const TrackProperties& properties)
 {
     {
         const ScopedLock sl (trackPropertiesLock);
@@ -219,12 +219,12 @@ void JuceDemoPluginAudioProcessor::updateTrackProperties (const TrackProperties&
 
     MessageManager::callAsync ([this]
     {
-        if (auto* editor = dynamic_cast<JuceDemoPluginAudioProcessorEditor*> (getActiveEditor()))
+        if (auto* editor = dynamic_cast<FMPluginEditor*> (getActiveEditor()))
              editor->updateTrackProperties();
     });
 }
 
-JuceDemoPluginAudioProcessor::TrackProperties JuceDemoPluginAudioProcessor::getTrackProperties() const
+FMPluginProcessor::TrackProperties FMPluginProcessor::getTrackProperties() const
 {
     const ScopedLock sl (trackPropertiesLock);
     return trackProperties;
@@ -233,7 +233,7 @@ JuceDemoPluginAudioProcessor::TrackProperties JuceDemoPluginAudioProcessor::getT
 
 //==============================================================================
 template <typename FloatType>
-void JuceDemoPluginAudioProcessor::process (AudioBuffer<FloatType>& buffer, MidiBuffer& midiMessages, AudioBuffer<FloatType>& delayBuffer)
+void FMPluginProcessor::process (AudioBuffer<FloatType>& buffer, MidiBuffer& midiMessages, AudioBuffer<FloatType>& delayBuffer)
 {
     auto gainParamValue  = state.getParameter ("gain") ->getValue();
     auto delayParamValue = state.getParameter ("delay")->getValue();
@@ -332,7 +332,7 @@ void JuceDemoPluginAudioProcessor::process (AudioBuffer<FloatType>& buffer, Midi
 }
 
 template <typename FloatType>
-void JuceDemoPluginAudioProcessor::applyGain (AudioBuffer<FloatType>& buffer, AudioBuffer<FloatType>& delayBuffer, float gainLevel)
+void FMPluginProcessor::applyGain (AudioBuffer<FloatType>& buffer, AudioBuffer<FloatType>& delayBuffer, float gainLevel)
 {
     ignoreUnused (delayBuffer);
 
@@ -341,7 +341,7 @@ void JuceDemoPluginAudioProcessor::applyGain (AudioBuffer<FloatType>& buffer, Au
 }
 
 template <typename FloatType>
-void JuceDemoPluginAudioProcessor::applyDelay (AudioBuffer<FloatType>& buffer, AudioBuffer<FloatType>& delayBuffer, float delayLevel)
+void FMPluginProcessor::applyDelay (AudioBuffer<FloatType>& buffer, AudioBuffer<FloatType>& delayBuffer, float delayLevel)
 {
     auto numSamples = buffer.getNumSamples();
 
@@ -366,7 +366,7 @@ void JuceDemoPluginAudioProcessor::applyDelay (AudioBuffer<FloatType>& buffer, A
     delayPosition = delayPos;
 }
 
-void JuceDemoPluginAudioProcessor::initialiseSynth()
+void FMPluginProcessor::initialiseSynth()
 {
     auto numVoices = 8;
 
@@ -378,7 +378,7 @@ void JuceDemoPluginAudioProcessor::initialiseSynth()
     synth.addSound (new SineWaveSound());
 }
 
-void JuceDemoPluginAudioProcessor::updateCurrentTimeInfoFromHost()
+void FMPluginProcessor::updateCurrentTimeInfoFromHost()
 {
     const auto newInfo = [&]
     {
@@ -399,7 +399,7 @@ void JuceDemoPluginAudioProcessor::updateCurrentTimeInfoFromHost()
     lastPosInfo.set (newInfo);
 }
 
-juce::AudioProcessor::BusesProperties JuceDemoPluginAudioProcessor::getBusesProperties()
+juce::AudioProcessor::BusesProperties FMPluginProcessor::getBusesProperties()
 {
     return BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
                             .withOutput ("Output", AudioChannelSet::stereo(), true);
@@ -407,5 +407,5 @@ juce::AudioProcessor::BusesProperties JuceDemoPluginAudioProcessor::getBusesProp
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new JuceDemoPluginAudioProcessor();
+    return new FMPluginProcessor();
 }
