@@ -11,16 +11,16 @@
 #include "WaveshaperChart.h"
 
 
-class JuceDemoPluginAudioProcessorEditor  : public AudioProcessorEditor,
+class FMPluginEditor  : public AudioProcessorEditor,
                                                 private Timer,
                                                 private Value::Listener,//,
                                                 public Button::Listener,
                                                 public Slider::Listener
 {
 public:
-    JuceDemoPluginAudioProcessorEditor (JuceDemoPluginAudioProcessor& owner);
+    FMPluginEditor (FMPluginProcessor& owner);
   
-    ~JuceDemoPluginAudioProcessorEditor() override;
+    ~FMPluginEditor() override;
 
     
 //==============================================================================
@@ -87,7 +87,7 @@ public:
         AudioProcessorValueTreeState::SliderAttachment gainAttachment, delayAttachment, modAttachment;
         AudioProcessorValueTreeState::ComboBoxAttachment iNumAttachment, iDenAttachment;
         AudioProcessorValueTreeState::SliderAttachment attackAttachment, sustainAttachment, releaseAttachment, mattackAttachment, msustainAttachment, mreleaseAttachment;
-        AudioProcessorValueTreeState::ComboBoxAttachment iEnvAttachment, iModEnvAttachment, presetsAttachment;
+        AudioProcessorValueTreeState::ComboBoxAttachment iEnvAttachment, iModEnvAttachment;
         AudioProcessorValueTreeState::SliderAttachment chebyshevAmpAttachment1, chebyshevAmpAttachment2, chebyshevAmpAttachment3, chebyshevAmpAttachment4, chebyshevAmpAttachment5, chebyshevAmpAttachment6, chebyshevAmpAttachment7, chebyshevAmpAttachment8, chebyshevAmpAttachment9;
         
         Colour backgroundColour;
@@ -98,7 +98,7 @@ public:
         Value lastUIWidth, lastUIHeight;
 
         //==============================================================================
-        JuceDemoPluginAudioProcessor& getProcessor() const;
+        FMPluginProcessor& getProcessor() const;
 
         //==============================================================================
         // quick-and-dirty function to format a timecode string
@@ -114,5 +114,5 @@ public:
         void updateCurrentTimeInfoFromHost();
         void valueChanged (Value&) override;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceDemoPluginAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FMPluginEditor)
 };
